@@ -1,21 +1,21 @@
 import run from "aocrunner";
 import { MinHeap } from "@datastructures-js/heap";
 
-const parseInput = (rawInput: string) => rawInput.split('\n');
+const parseInput = (rawInput: string) => rawInput.split("\n");
 
 const part1 = (rawInput: string) => {
   const items = parseInput(rawInput);
 
   let maxSum = 0;
   let currentSum = 0;
-  items.forEach(item => {
-    if (item === '') {
+  items.forEach((item) => {
+    if (item === "") {
       maxSum = Math.max(currentSum, maxSum);
-      currentSum = 0
+      currentSum = 0;
     } else {
-      currentSum += Number(item)
+      currentSum += Number(item);
     }
-  })
+  });
   if (currentSum > maxSum) {
     maxSum = Math.max(currentSum, maxSum);
   }
@@ -43,7 +43,7 @@ const handleSum = (val: number, heap: MinHeap<number>, size: number) => {
     heap.pop();
     heap.push(val);
   }
-}
+};
 
 // implement min heap
 const part2 = (rawInput: string) => {
@@ -53,14 +53,14 @@ const part2 = (rawInput: string) => {
   const heap = new MinHeap<number>();
   let currentSum = 0;
 
-  items.forEach(item => {
-    if (item === '') {
+  items.forEach((item) => {
+    if (item === "") {
       handleSum(currentSum, heap, k);
       currentSum = 0;
     } else {
       currentSum += Number(item);
     }
-  })
+  });
   handleSum(currentSum, heap, k);
 
   let topKSum = 0;
@@ -84,7 +84,7 @@ const input = `1000
 8000
 9000
 
-10000`
+10000`;
 
 run({
   part1: {
