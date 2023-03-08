@@ -125,9 +125,9 @@ Both parts: 15.898ms
 
 ```
 Day 09
-Time part 1: 87.853ms
-Time part 2: 71.798ms
-Both parts: 159.65ms
+Time part 1: 23.211ms
+Time part 2: 9.119ms
+Both parts: 32.33ms
 ```
 
 ```
@@ -244,7 +244,7 @@ Both parts: -
 
 ```
 Total stars: 18/50
-Total time: 204.674ms
+Total time: 77.354ms
 ```
 
 <!--/RESULTS-->

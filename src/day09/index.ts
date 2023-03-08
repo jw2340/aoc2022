@@ -29,119 +29,15 @@ const calculateTailVisited = (tailVisited: {
   return total;
 };
 
-const part1 = (rawInput: string) => {
-  const headPosition = { x: 0, y: 0 };
-  const tailPosition = { x: 0, y: 0 };
-
-  // keep track of where T visited
-  const tailVisited = {};
-  processTailVisit(tailPosition, tailVisited);
-
-  const lines = parseInput(rawInput);
-  lines.forEach((line) => {
-    const move = parseMove(line);
-
-    // for each move, move H once, check if T is more than 1 step away, and move if so
-    for (let i = 0; i < move.num; i++) {
-      // update H position
-      switch (move.direction) {
-        case "R":
-          headPosition.x++;
-          break;
-        case "L":
-          headPosition.x--;
-          break;
-        case "U":
-          headPosition.y++;
-          break;
-        case "D":
-          headPosition.y--;
-          break;
-        default:
-          throw Error("Invalid direction");
-      }
-
-      // if x and y absolute difference < 2
-      const diff = {
-        x: headPosition.x - tailPosition.x,
-        y: headPosition.y - tailPosition.y,
-      };
-      if (Math.abs(diff.x) < 2 && Math.abs(diff.y) < 2) {
-        continue;
-      }
-
-      // update T position
-      // how to determine where to move? check x and y difference btwn H and T -> map to a movement
-      // move right - diff x = 2, y = 0
-      if (diff.x === 2 && diff.y === 0) {
-        tailPosition.x++;
-      }
-      // move left - diff x = -2, y = 0
-      if (diff.x === -2 && diff.y === 0) {
-        tailPosition.x--;
-      }
-      // move up - diff x = 0, y = 2
-      if (diff.x === 0 && diff.y === 2) {
-        tailPosition.y++;
-      }
-      // move down - diff x = 0, y = -2
-      if (diff.x === 0 && diff.y === -2) {
-        tailPosition.y--;
-      }
-      // move up, right - 2,2; 2,1; 1,2
-      if (
-        (diff.x === 2 && diff.y === 2) ||
-        (diff.x == 2 && diff.y === 1) ||
-        (diff.x === 1 && diff.y === 2)
-      ) {
-        tailPosition.x++;
-        tailPosition.y++;
-      }
-      // move up, left - -2,2; -2,1; -1,2
-      if (
-        (diff.x === -2 && diff.y === 2) ||
-        (diff.x == -2 && diff.y === 1) ||
-        (diff.x === -1 && diff.y === 2)
-      ) {
-        tailPosition.x--;
-        tailPosition.y++;
-      }
-      // move down, right - 2,-2; 2,-1; 1,-2
-      if (
-        (diff.x === 2 && diff.y === -2) ||
-        (diff.x == 2 && diff.y === -1) ||
-        (diff.x === 1 && diff.y === -2)
-      ) {
-        tailPosition.x++;
-        tailPosition.y--;
-      }
-      // move down, left - -2,-2; -2,-1; -1,-2
-      if (
-        (diff.x === -2 && diff.y === -2) ||
-        (diff.x == -2 && diff.y === -1) ||
-        (diff.x === -1 && diff.y === -2)
-      ) {
-        tailPosition.x--;
-        tailPosition.y--;
-      }
-      processTailVisit(tailPosition, tailVisited);
-    }
-  });
-
-  return calculateTailVisited(tailVisited);
-};
-
-const part2 = (rawInput: string) => {
-  // movements for knots are same but now there are 9 add'l knots to move after H moves instead of 1
-  const KNOTS_NUM = 10;
+const trackRopeTailMovement = (rawInput: string, knotsNum: number) => {
   const knots: { x: number; y: number }[] = [];
-  for (let i = 0; i < KNOTS_NUM; i++) {
+  for (let i = 0; i < knotsNum; i++) {
     knots[i] = { x: 0, y: 0 };
   }
 
   // keep track of where T visited
   const tailVisited = {};
-  processTailVisit(knots[KNOTS_NUM - 1], tailVisited);
+  processTailVisit(knots[knotsNum - 1], tailVisited);
 
   const lines = parseInput(rawInput);
   lines.forEach((line) => {
@@ -168,7 +64,7 @@ const part2 = (rawInput: string) => {
           throw Error("Invalid direction");
       }
 
-      for (let i = 1; i < KNOTS_NUM; i++) {
+      for (let i = 1; i < knotsNum; i++) {
         // if x and y absolute difference < 2
         const diff = {
           x: knots[i - 1].x - knots[i].x,
@@ -232,14 +128,21 @@ const part2 = (rawInput: string) => {
           knots[i].x--;
           knots[i].y--;
         }
-        if (i == KNOTS_NUM - 1) {
+        if (i == knotsNum - 1) {
           processTailVisit(knots[i], tailVisited);
         }
       }
     }
   });
-
   return calculateTailVisited(tailVisited);
+};
+
+const part1 = (rawInput: string) => {
+  return trackRopeTailMovement(rawInput, 2);
+};
+
+const part2 = (rawInput: string) => {
+  return trackRopeTailMovement(rawInput, 10);
 };
 
 const input = `R 4
